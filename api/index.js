@@ -4,7 +4,7 @@ const fetch = (...args) =>
   import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-const CHANNEL_ID = '@FahrRadarGratis';
+const CHANNEL_ID = -1005834331857;
 const WEATHER_API_KEY = 'a6312628444ccec4f1cc4d0f97eace3d';
 const REGIONS = ['Zurich', 'Bern', 'Basel', 'Geneva', 'Lausanne'];
 
