@@ -1,5 +1,7 @@
-import { Telegraf } from 'telegraf';
-import fetch from 'node-fetch';
+const { Telegraf } = require('telegraf');
+
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const CHANNEL_ID = '@FahrRadarGratis';
@@ -30,7 +32,7 @@ const postToTelegram = async () => {
   await bot.telegram.sendMessage(CHANNEL_ID, msg, { parse_mode: 'Markdown' });
 };
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   await postToTelegram();
   res.status(200).send('Nachricht gesendet ✅');
-}
+};
