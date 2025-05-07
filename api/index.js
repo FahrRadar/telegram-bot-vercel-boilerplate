@@ -4,7 +4,7 @@ const fetch = (...args) =>
   import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-const CHANNEL_ID = -1005834331857;
+const CHANNEL_ID = -1005834331857; // deine private Channel-ID (ohne Anführungszeichen)
 const WEATHER_API_KEY = 'a6312628444ccec4f1cc4d0f97eace3d';
 const REGIONS = ['Zurich', 'Bern', 'Basel', 'Geneva', 'Lausanne'];
 
@@ -34,10 +34,12 @@ const generateMessage = async () => {
 const postToTelegram = async () => {
   try {
     const msg = await generateMessage();
-    await bot.telegram.sendMessage(CHANNEL_ID, msg, { parse_mode: 'Markdown' });
-    console.log('✅ Nachricht erfolgreich gesendet!');
+    const result = await bot.telegram.sendMessage(CHANNEL_ID, msg, {
+      parse_mode: 'Markdown'
+    });
+    console.log('✅ Nachricht erfolgreich gesendet:', result);
   } catch (err) {
-    console.error('❌ Fehler beim Senden an Telegram:', err);
+    console.error('❌ Telegram-API-Fehler:', err.response?.description || err.message);
     throw err;
   }
 };
@@ -47,6 +49,6 @@ module.exports = async (req, res) => {
     await postToTelegram();
     res.status(200).send('✅ Nachricht gesendet an Telegram');
   } catch (err) {
-    res.status(500).send('❌ Fehler beim Senden an Telegram');
+    res.status(500).send(`❌ Fehler: ${err.response?.description || err.message}`);
   }
 };
